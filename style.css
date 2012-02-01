@@ -1,0 +1,11 @@
+body {
+  margin-top: -5px;
+  margin-left: -10px; }
+
+#cats {
+  width: 125%; }
+
+#cats img {
+  width: 250px;
+  margin-top: -5px;
+  margin-bottom: -5px; }
