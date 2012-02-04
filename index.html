@@ -1,59 +1,110 @@
 <!DOCTYPE html>
 <html>
+<!--
+
+Lovingly crafted by @billyroh. Please enjoy.
+
+-->
 <head>
-<title>Infinicats</title>
+<title>INFINITE CATS</title>
 <link href='style.css' rel='stylesheet' type='text/css'>
-<script src='http://code.jquery.com/jquery-1.7.1.min.js'></script>
+<script src='http://infinicats.com/lib/jquery-1.7.1.min.js'></script>
 <script>
 var next_max_tag_id;
 var i = 0;
 var didLoad = false;
+var tag = "cat";
+
 $(function() {
+	start();
+});
+
+function start() {
+	loadPictures();
+	setInterval(function() {
+		loadPictures(next_max_tag_id);
+	}, 15000);
+}
+
+function loadPictures(tag_id) {
 	$.ajax({
 		type: "GET",
 		dataType: "jsonp",
 		cache: false,
-		url: "https://api.instagram.com/v1/tags/cat/media/recent?client_id=eb65e0f7615f4f839f9819b02fe8757b",
+		url: "https://api.instagram.com/v1/tags/" + tag + "/media/recent?client_id=eb65e0f7615f4f839f9819b02fe8757b&max_tag_id=" + tag_id,
 		success: function(rtn) {
 			next_max_tag_id = rtn.pagination.next_max_tag_id;
-			for (i = 0; i < rtn.data.length; i++) {
-				$("#cats").append("<img src='" + rtn.data[i].images.standard_resolution.url +"'>");
+			var dataLength = rtn.data.length;
+			var docHeight = $(document).height()/2 + 200;
+			timedLoop();
+			i = 0;
+
+			function timedLoop () {
+				setTimeout(function() {
+					var imageLink = rtn.data[i].link;
+					var imageID = rtn.data[i].id;
+					var imageURL = rtn.data[i].images.standard_resolution.url;
+					var randomWidth = Math.floor(Math.random() * 15) + 20 + "%";
+					var randomLeft = Math.floor(Math.random() * 95) - 15 + "%";
+
+					// Known bug: Image from previous tag appears in flow. 
+					// Checking if each image has current tag makes every noticeably slower.
+					// Lesser of two evils, let bug live, let performance be.
+					/*
+					if (!jQuery.inArray(tag, rtn.data[i].tags))
+						return;
+					*/
+					$('#photo-wrapper').append("<a target='_blank' href='" + imageLink + "' id='link" + imageID + "'><div class='photo' id='" + imageID + 
+					"'style='bottom: -600px; width:" + randomWidth + "; left:" + randomLeft 
+					+ ";'><img src='" + imageURL + "'></div></a>");
+
+					$("#" + imageID).css('z-index', $("#" + imageID).width());
+
+					// Parallax animation. Larger the image (ie. closer the image) the faster it moves.
+					var scrollTime = 999999/($("#" + imageID).width() * 0.3);
+					$("#" + imageID).animate({
+						bottom: docHeight + 700
+						}, scrollTime, 'linear',
+						function() {
+						$("#link" + imageID).remove();
+					});
+					
+					i++;
+					if (i < dataLength)
+						timedLoop();
+				}, 2200);
 			}
-			loadMore();
      	}
  	});
-});
+}
 
-$(window).scroll(function() {
-   if($(window).scrollTop() + $(window).height() > $(document).height() - 2000) {
-       loadMore();
-       sleep(100);
-	}
-});
-
-function loadMore() {
-	if (!didLoad) {
-		didLoad = true;
-	$.ajax({
-		type: "GET",
-		dataType: "jsonp",
-		cache: false,
-		url: "https://api.instagram.com/v1/tags/cat/media/recent?client_id=eb65e0f7615f4f839f9819b02fe8757b&max_tag_id=" + next_max_tag_id,
-		success: function(rtn) {
-			next_max_tag_id = rtn.pagination.next_max_tag_id;
-			for (i = 0; i < rtn.data.length; i++) {
-				$("#cats").append("<img src='" + rtn.data[i].images.standard_resolution.url +"'>");
-			}
-			didLoad = false;
-     	}
-     });
- }
+function getNewTag() {
+	tag = $("#tag").val();
+	tag.replace(/[^a-zA-Z 0-9]+/g,'');
+	$("#photo-wrapper").animate({
+		opacity: 0
+		}, 1000,
+		function() { $("#photo-wrapper").empty();
+		$("#photo-wrapper").css('opacity', 1);
+		i = 20;
+		start();
+		i = 0;
+	});
 }
 
 </script>
 </head>
+
 <body>
-<div id='cats'>
+<div id='photo-wrapper'>
 </div>
+<div id='tag-wrapper'><input type='text' id='tag' value='cat' /></div>
+<script>
+$("#tag").keypress(function(e) {
+    if(e.keyCode == 13) {
+        getNewTag();
+    }
+});
+</script>
 </body>
 </html>
