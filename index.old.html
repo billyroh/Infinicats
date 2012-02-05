@@ -1,11 +1,21 @@
 <!DOCTYPE html>
 <html>
+<!--
+
+Lovingly crafted by @billyroh. Photos from Instagram. Please enjoy.
+
+-->
 <head>
 <title>INFINITE CATS</title>
 <link href='style.css' rel='stylesheet' type='text/css'>
 <script src='http://infinicats.com/lib/jquery-1.7.1.min.js'></script>
 <script>
-var next_max_tag_id;
+
+// Known bug: Image from previous tag appears in flow. 
+// Checking if each image has current tag kills performance.
+// Lesser of two evils, let bug live, let performance be.
+
+var next_max_tag_id = '';
 var i = 0;
 var didLoad = false;
 var tag = "cat";
@@ -18,6 +28,7 @@ function start() {
 	loadPictures();
 	setInterval(function() {
 		loadPictures(next_max_tag_id);
+		//alert(next_max_tag_id);
 	}, 1000);
 }
 
@@ -30,7 +41,7 @@ function loadPictures(tag_id) {
 		success: function(rtn) {
 			next_max_tag_id = rtn.pagination.next_max_tag_id;
 			var dataLength = rtn.data.length;
-			var docHeight = $(document).height()/2 + 200;
+			var docHeight = $(document).height();
 			timedLoop();
 			i = 0;
 
@@ -45,18 +56,19 @@ function loadPictures(tag_id) {
 					// Do not add photo if there is an excessive number of photos on screen.
 					if ($("#photo-wrapper > a").size() > 6) return;
 
-					// Known bug: Image from previous tag appears in flow. 
-					// Checking if each image has current tag kill performance.
-
+					// Append if not.
 					$('#photo-wrapper').append("<a target='_blank' href='" + imageLink + "' id='link" + imageID + "'><div class='photo' id='" + imageID + 
-					"'style='bottom: -600px; width:" + randomWidth + "; left:" + randomLeft + ";'><img src='" + imageURL + "'></div></a>");
+					"'style='bottom: -450px; width:" + randomWidth + "; left:" + randomLeft + ";'><img src='" + imageURL + "'></div></a>");
 
+					// I'd like to use -$("#" + imageID).width() * 1.5) for bottom attribute,
+					// but it causes weird bugs I can't figure out.
 					$("#" + imageID).css('z-index', $("#" + imageID).width());
 
 					// Parallax animation. Larger the image (ie. closer the image) the faster it moves.
-					var scrollTime = 999999/($("#" + imageID).width() * 0.3);
+					var scrollTime = 999999/(17 * Math.log($("#" + imageID).width()*2));
+
 					$("#" + imageID).animate({
-						bottom: docHeight * 2
+						bottom: docHeight * 1.75
 						}, scrollTime, 'linear',
 						function() {
 						$("#link" + imageID).remove();
@@ -66,7 +78,7 @@ function loadPictures(tag_id) {
 						$("#link" + imageID).delay(10000);
 						$("#link" + imageID).remove();
 					});
-					
+
 					i++;
 					if (i < dataLength)
 						timedLoop();
@@ -79,21 +91,36 @@ function loadPictures(tag_id) {
 function getNewTag() {
 	tag = $("#tag").val();
 	tag.replace(/[^a-zA-Z 0-9]+/g,'');
-	tag.split(' ').join('');
-	i = 20;
-	start();
-	i = 0;
+	$("#photo-wrapper").animate({
+		opacity: 1
+		}, 1000,
+		function() { 
+		//$("#photo-wrapper").empty();
+		//$("#photo-wrapper").css('opacity', 1);
+		start();
+	});
 }
+
+</script>
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-28926775-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
 
 </script>
 </head>
 
 <body>
-<div id='photo-wrapper'></div>
-<div id='tag-wrapper'>
-<input type='text' id='tag' value='cat' />
-<div id='credits'><p>A dumb thing lovingly crafted by <a href='twitter.com/billyroh'>@billyroh</a>.<br />Photos from <a href='instagr.am'>Instagram</a>. Please enjoy.</div>
+<div id='photo-wrapper'>
 </div>
+<div id='tag-wrapper'><input type='text' id='tag' value='cat' /></div>
 <script>
 $("#tag").keypress(function(e) {
     if(e.keyCode == 13) {
