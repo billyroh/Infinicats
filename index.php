@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>INFINITE CATS</title>
 <link href='style.css' rel='stylesheet' type='text/css'>
 <script src='lib/jquery-1.7.1.min.js'></script>
+<link rel="icon" type="image/png" href="images/favicon.png">
 <script>
 var next_max_tag_id;
 var i = 0;
@@ -16,10 +16,16 @@ $(function() {
 
 function start() {
 	tag = $("#tag").val();
+	tag = tag.replace(/[^a-zA-Z 0-9]+/g,'');
+	tag = tag.replace(/ /g,'');
+	var title = tag.toUpperCase();
+	if ((title.charAt(tag.length - 1)) != "S")
+		title += "S";
+	document.title = 'INFINITE ' + title;
 	loadPictures();
 	setInterval(function() {
 		loadPictures(next_max_tag_id);
-	}, 60000);
+	}, 30000);
 }
 
 function loadPictures(tag_id) {
@@ -34,9 +40,12 @@ function loadPictures(tag_id) {
 			var docHeight = $(document).height()/2 + 200;
 			timedLoop();
 			i = 0;
-
 			function timedLoop () {
 				setInterval(function() {
+
+					if (rtn.data[i] == null)
+						return;
+
 					var imageLink = rtn.data[i].link;
 					var imageID = rtn.data[i].id;
 					var imageURL = rtn.data[i].images.standard_resolution.url;
@@ -72,7 +81,7 @@ function loadPictures(tag_id) {
 					i++;
 					if (i < dataLength)
 						timedLoop();
-				}, 3000);
+				}, 5000);
 			}
      	}
  	});
@@ -81,6 +90,7 @@ function loadPictures(tag_id) {
 function getNewTag() {
 	tag = $("#tag").val();
 	tag = tag.replace(/[^a-zA-Z 0-9]+/g,'');
+	tag = tag.replace(/ /g,'');
 	$("#photo-wrapper").animate({
 		opacity: 0
 	}, 900, function(){
@@ -100,8 +110,10 @@ function getNewTag() {
 <?php
 	if (!isset($_GET["q"]))
 		$tag = "cat";
-	else
-		$tag = $_GET["q"];
+	else {
+		$tag = ereg_replace("[^A-Za-z0-9]", "", $_GET["q"]);
+		str_replace(" ", "", $tag);
+	}
 	echo "<input type='text' id='tag' value='$tag' />";
 ?>
 <div id='credits'><p>A dumb thing lovingly crafted by <a href='twitter.com/billyroh'>@billyroh</a>.<br />Photos from <a href='instagr.am'>Instagram</a>. Please enjoy.</div>
