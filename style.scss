@@ -3,6 +3,7 @@
 		left: auto;
 		right: auto;
 	}
+	display: block;
 }
 
 $gray: #363636;
@@ -19,18 +20,18 @@ body {
 
 /* Modals */
 
-#loading {
+#alert {
 	@include modal;
 	@include centre;
-	text-align: center;
+	width: 150px;
+	height: 25px;
 	color: white;
-	width: 190px;
-	height: 140px;
-	line-height: 50px;
-	font-size: 20px;
-	-moz-border-radius: 5px;
-	border-radius: 5px;
+	text-align: center;
 	opacity: 0;
+}
+
+#alert p {
+	text-transform:capitalize;
 }
 
 #tag-wrapper {
@@ -68,10 +69,9 @@ body {
 	border-style: none;
 	height: 50px;
 	background: $gray;
-	display: block;
 	width: 300px;
-	-moz-border-radius: 5px;
-	border-radius: 5px;
+	-moz-border-radius: 25px;
+	border-radius: 25px;
 }
 
 /* Layers */

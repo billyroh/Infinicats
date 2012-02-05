@@ -3,20 +3,20 @@ body {
   background: url("images/wave-01.png"); }
 
 /* Modals */
-#loading {
+#alert {
   background: #363636;
   z-index: 999;
   margin-left: auto;
   margin-right: auto;
-  text-align: center;
+  display: block;
+  width: 150px;
+  height: 25px;
   color: white;
-  width: 190px;
-  height: 140px;
-  line-height: 50px;
-  font-size: 20px;
-  -moz-border-radius: 5px;
-  border-radius: 5px;
+  text-align: center;
   opacity: 0; }
+
+#alert p {
+  text-transform: capitalize; }
 
 #tag-wrapper {
   width: 100%;
@@ -44,16 +44,16 @@ body {
 #tag {
   margin-left: auto;
   margin-right: auto;
+  display: block;
   font-size: 30px;
   color: white;
   text-align: center;
   border-style: none;
   height: 50px;
   background: #363636;
-  display: block;
   width: 300px;
-  -moz-border-radius: 5px;
-  border-radius: 5px; }
+  -moz-border-radius: 25px;
+  border-radius: 25px; }
 
 /* Layers */
 .photo {
