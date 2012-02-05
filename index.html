@@ -3,7 +3,7 @@
 <head>
 <title>INFINITE CATS</title>
 <link href='style.css' rel='stylesheet' type='text/css'>
-<script src='http://infinicats.com/lib/jquery-1.7.1.min.js'></script>
+<script src='lib/jquery-1.7.1.min.js'></script>
 <script>
 var next_max_tag_id;
 var i = 0;
@@ -18,7 +18,7 @@ function start() {
 	loadPictures();
 	setInterval(function() {
 		loadPictures(next_max_tag_id);
-	}, 1000);
+	}, 21000);
 }
 
 function loadPictures(tag_id) {
@@ -35,7 +35,7 @@ function loadPictures(tag_id) {
 			i = 0;
 
 			function timedLoop () {
-				setTimeout(function() {
+				setInterval(function() {
 					var imageLink = rtn.data[i].link;
 					var imageID = rtn.data[i].id;
 					var imageURL = rtn.data[i].images.standard_resolution.url;
@@ -70,7 +70,7 @@ function loadPictures(tag_id) {
 					i++;
 					if (i < dataLength)
 						timedLoop();
-				}, 7000);
+				}, 1000);
 			}
      	}
  	});
@@ -78,8 +78,7 @@ function loadPictures(tag_id) {
 
 function getNewTag() {
 	tag = $("#tag").val();
-	tag.replace(/[^a-zA-Z 0-9]+/g,'');
-	tag.split(' ').join('');
+	tag = tag.replace(/[^a-zA-Z 0-9]+/g,'');
 	i = 20;
 	start();
 	i = 0;

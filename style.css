@@ -1,6 +1,5 @@
 body {
   font-family: Helvetica, sans-serif;
-  width: 110%;
   background: url("images/wave-01.png"); }
 
 /* Modals */
@@ -46,6 +45,7 @@ body {
   margin-left: auto;
   margin-right: auto;
   font-size: 30px;
+  color: white;
   text-align: center;
   border-style: none;
   height: 50px;
