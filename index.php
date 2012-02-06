@@ -50,7 +50,7 @@ function loadPictures(tag_id) {
 					var imageID = rtn.data[i].id;
 					var imageURL = rtn.data[i].images.standard_resolution.url;
 					var randomWidth = Math.floor(Math.random() * 25) + 15 + "%";
-					var randomLeft = Math.floor(Math.random() * 100) - 15 + "%";
+					var randomLeft = Math.floor(Math.random() * 90) - 5 + "%";
 
 					// Do not add photo if there is an excessive number of photos on screen.
 					if ($("#photo-wrapper > a").size() > 6) return;
